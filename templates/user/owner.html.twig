@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Empresas index{% endblock %}
+
+{% block body %}
+<h1>Empresas index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Cif</th>
+            <th>Direction</th>
+            <th>Cp</th>
+            <th>City</th>
+            <th>Province</th>
+            <th>Logo</th>
+            <th>Validation</th>
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for empresa in app.user.empresas %}
+        <tr>
+            <td>{{ empresa.id }}</td>
+            <td>{{ empresa.name }}</td>
+            <td>{{ empresa.cif }}</td>
+            <td>{{ empresa.direction }}</td>
+            <td>{{ empresa.cp }}</td>
+            <td>{{ empresa.city }}</td>
+            <td>{{ empresa.province }}</td>
+            <td>{{ empresa.logo }}</td>
+            <td>{{ empresa.validation }}</td>
+            <td><img src="/imagenes/{{empresa.logo}}"></td>
+            <td>
+                {%if is_granted("ROLE_OWNER")%}
+                    <a href="{{ path('empresas_show', {'id': empresa.id}) }}">show</a>
+                    <a href="{{ path('empresas_edit', {'id': empresa.id}) }}">edit</a>
+
+                    {% if empresa.validation == 1 %}
+                        <br>
+                        <a href="/register/empleado/{{empresa.id}}/">Añade usuarios</a>
+                        {% for empleado in empresa.empleados %}
+                        <ul>
+                            <h3>Empleado: {{empleado.name}}</h3>
+
+                            {% for regis in empleado.usuarioRegistro %}
+                                <h4>Fecha Entrada: {{regis.input|date('H:i:s')}}</h4>
+                                {% if regis.output is null %}
+                                    <h4>El usuario aun no ha salido</h4>
+                                {% else %}
+                                    <h4>Hora de salida: {{regis.output|date('H:i:s')}}</h4>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endfor %}
+                    {% endif %}
+
+                {%endif%}
+            </td>
+        </tr>
+                {% else %}
+        <tr>
+            <td colspan="10">no records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('empresas_new') }}">Create new</a>
+{% endblock %}

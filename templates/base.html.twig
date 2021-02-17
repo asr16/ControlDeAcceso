@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+
+        {% block javascripts %}{% endblock %}
+    </head>
+    <body>
+<!--       Para incluir la vista con el menu-->
+       {%if app.user%}
+       <a href="{{ path('app_logout') }}">Logout</a>
+       {%else%}
+        <a href="{{ path('app_register') }}">Registro</a>
+        <a href="{{ path('app_login') }}">Login</a>
+        <a href="{{ path('main') }}">Pagina principal</a>
+        <h1>BIENVENIDO</h1>
+        <h3>¡Registrate o logeate para que puedas disfrutar de nuestra web al completo!</h3>
+        {%endif%}
+        {% block body %}{% endblock %}
+    </body>
+</html>

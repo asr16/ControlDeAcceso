@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Empresas index{% endblock %}
+
+{% block body %}
+<h1>Empresas index</h1>
+
+{%if is_granted("ROLE_OWNER")%}
+<br>
+<br>
+<a href="{{ path('empresas_new') }}">Crear una nueva empresa</a><br><br>
+{%endif%}
+<br>
+<br>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Cif</th>
+            <th>Direction</th>
+            <th>Cp</th>
+            <th>City</th>
+            <th>Province</th>
+            <th>Logo</th>
+            <th>Validation</th>
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for empresa in empresas %}
+        <tr>
+            <td>{{ empresa.id }}</td>
+            <td>{{ empresa.name }}</td>
+            <td>{{ empresa.cif }}</td>
+            <td>{{ empresa.direction }}</td>
+            <td>{{ empresa.cp }}</td>
+            <td>{{ empresa.city }}</td>
+            <td>{{ empresa.province }}</td>
+            <td>{{ empresa.logo }}</td>
+            <td>{{ empresa.validation }}</td>
+            <td><img src="/imagenes/{{empresa.logo}}"></td>
+            <td>
+                {%if is_granted("ROLE_OWNER")%}
+                <a href="{{ path('empresas_show', {'id': empresa.id}) }}">show</a>
+                <a href="{{ path('empresas_edit', {'id': empresa.id}) }}">edit</a>
+
+                {% if empresa.validation == 1 %}
+                <br>
+                <a href="/register/empleado/{{empresa.id}}/">Añade usuarios guarro</a>
+
+                {% endif %}
+
+                {%endif%}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="10">no records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!--validar empresas-->
+{%if is_granted("ROLE_ADMIN")%}
+{%for empresas in empresas %}
+<h1>{{empresas.name}}</h1>
+<!--Hacer un metodo que nos active la validacion de la empresa-->
+<a href="/empresas/validate/{{empresas.id}}/">Validar la empresa</a>
+<br>
+<a href="/empresas/noValidate/{{empresas.id}}/">Desvalida la empresa</a>
+{% endfor %}
+{%endif%}
+<br>
+
+{% endblock %}
